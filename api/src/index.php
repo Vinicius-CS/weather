@@ -13,6 +13,11 @@ header('Access-Control-Allow-Headers: Content-Type');
 
 $weather = new WeatherController();
 
+if ($_SERVER['REQUEST_METHOD'] !== 'GET')
+{
+  Response::json(['error' => 'Método não permitido'], 405);
+}
+
 try
 {
   switch (parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH))
