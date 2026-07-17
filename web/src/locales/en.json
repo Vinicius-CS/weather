@@ -8,5 +8,8 @@
     "minMax": "Min / Max",
     "humidity": "Humidity",
     "wind": "Wind"
+  },
+  "forecast": {
+    "title": "Coming days"
   }
 }

@@ -8,5 +8,8 @@
     "minMax": "Mín / Máx",
     "humidity": "Umidade",
     "wind": "Vento"
+  },
+  "forecast": {
+    "title": "Próximos dias"
   }
 }
