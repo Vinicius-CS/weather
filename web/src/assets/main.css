@@ -1,7 +1,10 @@
 * {
+  -moz-user-select: none;
+  -webkit-user-drag: none;
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+  user-select: none;
 }
 
 html {
