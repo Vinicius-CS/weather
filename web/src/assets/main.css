@@ -85,7 +85,7 @@ body {
 }
 
 .details {
-  border-top: 1px solid rgba(255, 255, 255, 0.25);
+  border-top: 0.063rem solid rgba(255, 255, 255, 0.25);
   display: grid;
   gap: 1rem 2rem;
   grid-template-columns: repeat(auto-fit, minmax(7.5rem, 1fr));
