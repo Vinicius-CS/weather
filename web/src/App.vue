@@ -9,6 +9,7 @@ const { t } = useI18n()
 
 const current = ref(null)
 const forecast = ref(null)
+const userLocation = ref(null)
 const cities = ref([])
 const topCities = ref([])
 const search = ref('')
@@ -39,6 +40,40 @@ async function loadCity(city)
 
 onMounted(async () => {
   topCities.value = await getSearches() ?? []
+
+  if (!navigator.geolocation || !window.isSecureContext)
+  {
+    return
+  }
+
+  navigator.geolocation.getCurrentPosition(
+    async (position) => {
+    try
+    {
+      userLocation.value = {
+        latitude: position.coords.latitude.toFixed(4),
+        longitude: position.coords.longitude.toFixed(4),
+      }
+
+      current.value = await getWeather(
+        'weather',
+        userLocation.value.latitude,
+        userLocation.value.longitude
+      )
+
+      forecast.value = await getWeather(
+        'forecast',
+        userLocation.value.latitude,
+        userLocation.value.longitude
+      )
+    }
+    catch (e)
+    {
+      console.error(e)
+    }
+  }, (error) => {
+    console.error(error)
+  })
 })
 </script>
 

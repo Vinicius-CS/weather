@@ -25,7 +25,7 @@ export function getCities(text)
   return request(`/api/cities?${new URLSearchParams(params)}`)
 }
 
-export function getWeather(type, latitude, longitude, city = '')
+export function getWeather(type, latitude, longitude)
 {
   const params = new URLSearchParams({
     'type': type,

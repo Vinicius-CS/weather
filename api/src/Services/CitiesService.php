@@ -5,6 +5,7 @@ declare(strict_types=1);
 final class CitiesService
 {
   private const BASE_URL = 'https://api.openweathermap.org/geo/1.0/direct';
+  private const REVERSE_URL = 'https://api.openweathermap.org/geo/1.0/reverse';
 
   private string $apiKey;
 
@@ -60,5 +61,25 @@ final class CitiesService
     }
 
     return $results;
+  }
+
+  public function reverse(float $latitude, float $longitude): ?string
+  {
+    $ch = curl_init(self::REVERSE_URL . '?' . http_build_query([
+      'lat' => $latitude,
+      'lon' => $longitude,
+      'limit' => 1,
+      'appid' => $this->apiKey,
+    ]));
+
+    curl_setopt_array($ch, [
+      CURLOPT_RETURNTRANSFER => true,
+      CURLOPT_TIMEOUT => 10,
+    ]);
+
+    $body = curl_exec($ch);
+    $data = $body !== false ? json_decode((string) $body, true) : null;
+
+    return isset($data[0]['name']) ? (string) $data[0]['name'] : null;
   }
 }
