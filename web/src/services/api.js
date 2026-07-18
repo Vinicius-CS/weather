@@ -11,6 +11,11 @@ async function request(path)
   return data
 }
 
+export function getCities(params)
+{
+  return request(`/api/cities?${new URLSearchParams(params)}`)
+}
+
 export function getWeather(params)
 {
   return request(`/api/weather?${new URLSearchParams(params)}`)
