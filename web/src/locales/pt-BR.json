@@ -6,6 +6,9 @@
   "search": {
     "placeholder": "Digite uma cidade..."
   },
+  "top": {
+    "title": "Mais buscadas:"
+  },
   "current": {
     "feelsLike": "Sensação",
     "minMax": "Mín / Máx",

@@ -11,6 +11,11 @@ async function request(path)
   return data
 }
 
+export function getSearches()
+{
+  return request('/api/searches')
+}
+
 export function getCities(text)
 {
   const params = {
@@ -20,7 +25,7 @@ export function getCities(text)
   return request(`/api/cities?${new URLSearchParams(params)}`)
 }
 
-export function getWeather(type, latitude, longitude)
+export function getWeather(type, latitude, longitude, city = '')
 {
   const params = new URLSearchParams({
     'type': type,

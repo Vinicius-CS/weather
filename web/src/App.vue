@@ -1,7 +1,7 @@
 <script setup>
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { getCities, getWeather } from './services/api.js'
+import { getSearches, getCities, getWeather } from './services/api.js'
 import CurrentWeather from './components/CurrentWeather.vue';
 import ForecastList from './components/ForecastList.vue';
 
@@ -10,11 +10,17 @@ const { t } = useI18n()
 const current = ref(null)
 const forecast = ref(null)
 const cities = ref([])
+const topCities = ref([])
+const search = ref('')
 
-async function loadCity(city) {
-  cities.value = await getCities(city)
+async function loadCity(city)
+{
+  search.value = ''
 
-  if (cities.value.length === 0) {
+  cities.value = await getCities(city.trim()) ?? []
+
+  if (cities.value.length === 0)
+  {
     return
   }
 
@@ -30,6 +36,10 @@ async function loadCity(city) {
     cities.value[0].longitude
   )
 }
+
+onMounted(async () => {
+  topCities.value = await getSearches() ?? []
+})
 </script>
 
 <template>
@@ -47,6 +57,13 @@ async function loadCity(city) {
         autofocus
         @keydown.enter.prevent="loadCity(search)"
       />
+    </div>
+
+    <div v-if="topCities.length" class="chips">
+      <span>{{ t('top.title') }}</span>
+      <button v-for="top in topCities" :key="top.city" class="chip" @click="loadCity(top.city)">
+        {{ top.city }}
+      </button>
     </div>
 
     <template v-if="current">

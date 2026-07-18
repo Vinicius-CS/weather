@@ -22,10 +22,27 @@ final class WeatherController
     }
 
     $service = new WeatherService();
+    $searchers = new SearchesService();
 
-    Response::json($service->fetch($tipo, [
-      'lat' => round((float) $latitude, 4),
-      'lon' => round((float) $longitude, 4),
-    ]));
+    $weather = $service->fetch(
+      $tipo,
+      [
+        'lat' => round((float) $latitude, 4),
+        'lon' => round((float) $longitude, 4),
+      ]
+    );
+
+    $city = trim($data['city'] ?? '');
+    $ip = $_SERVER['HTTP_X_FORWARDED_FOR'] ?? $_SERVER['REMOTE_ADDR'] ?? '';
+
+    if ($tipo === 'weather' && $city !== '' && $ip !== '')
+    {
+      $searchers->log(
+        $city,
+        trim(explode(',', $ip)[0])
+      );
+    }
+
+    Response::json($weather);
   }
 }

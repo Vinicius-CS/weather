@@ -6,6 +6,9 @@
   "search": {
     "placeholder": "Type a city..."
   },
+  "top": {
+    "title": "Most searched:"
+  },
   "current": {
     "feelsLike": "Feels like",
     "minMax": "Min / Max",

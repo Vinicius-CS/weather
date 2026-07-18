@@ -1,0 +1,7 @@
+CREATE TABLE IF NOT EXISTS searches (
+  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  city VARCHAR(120) NOT NULL,
+  client_hash CHAR(64) NOT NULL,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  UNIQUE KEY uk_city_client (city, client_hash)
+);
