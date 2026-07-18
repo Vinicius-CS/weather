@@ -49,6 +49,7 @@ const days = computed(() => {
 <template>
   <section class="card">
     <h3>{{ $t('forecast.title') }}</h3>
+
     <ul class="forecast">
       <li v-for="day in days" :key="day.date">
         <span class="day">{{ day.label }}</span>
