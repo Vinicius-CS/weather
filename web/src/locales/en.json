@@ -6,6 +6,10 @@
   "search": {
     "placeholder": "Type a city..."
   },
+  "geo": {
+    "locating": "Detecting your location...",
+    "denied": "Could not get your location, search for a city manually..."
+  },
   "top": {
     "title": "Most searched:"
   },

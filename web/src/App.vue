@@ -10,9 +10,11 @@ const { t } = useI18n()
 const current = ref(null)
 const forecast = ref(null)
 const userLocation = ref(null)
+const loading = ref(true)
 const cities = ref([])
 const topCities = ref([])
 const search = ref('')
+const geoText = ref('')
 
 async function loadCity(city)
 {
@@ -43,37 +45,48 @@ onMounted(async () => {
 
   if (!navigator.geolocation || !window.isSecureContext)
   {
+    loading.value = false
     return
   }
 
+  geoText.value = t('geo.locating')
+
   navigator.geolocation.getCurrentPosition(
     async (position) => {
-    try
-    {
-      userLocation.value = {
-        latitude: position.coords.latitude.toFixed(4),
-        longitude: position.coords.longitude.toFixed(4),
+      try
+      {
+        userLocation.value = {
+          latitude: position.coords.latitude.toFixed(4),
+          longitude: position.coords.longitude.toFixed(4),
+        }
+
+        current.value = await getWeather(
+          'weather',
+          userLocation.value.latitude,
+          userLocation.value.longitude
+        )
+
+        forecast.value = await getWeather(
+          'forecast',
+          userLocation.value.latitude,
+          userLocation.value.longitude
+        )
       }
-
-      current.value = await getWeather(
-        'weather',
-        userLocation.value.latitude,
-        userLocation.value.longitude
-      )
-
-      forecast.value = await getWeather(
-        'forecast',
-        userLocation.value.latitude,
-        userLocation.value.longitude
-      )
+      catch (e)
+      {
+        console.error(e)
+        geoText.value = t('geo.denied')
+      }
+      finally
+      {
+        loading.value = false
+      }
+    },
+    () => {
+      loading.value = false
+      geoText.value = t('geo.denied')
     }
-    catch (e)
-    {
-      console.error(e)
-    }
-  }, (error) => {
-    console.error(error)
-  })
+  )
 })
 </script>
 
@@ -94,17 +107,37 @@ onMounted(async () => {
       />
     </div>
 
+    <div
+      class="loading-bar"
+      :class="{ hidden: !loading }"
+    >
+      <div />
+    </div>
+
     <div v-if="topCities.length" class="chips">
       <span>{{ t('top.title') }}</span>
-      <button v-for="top in topCities" :key="top.city" class="chip" @click="loadCity(top.city)">
+      <button
+        v-for="top in topCities"
+        :key="top.city"
+        class="chip"
+        @click="loadCity(top.city)"
+      >
         {{ top.city }}
       </button>
     </div>
+
+    <p
+      v-if="geoText"
+      class="geo-status"
+    >
+      {{ geoText }}
+    </p>
 
     <template v-if="current">
       <CurrentWeather
         :current="current"
       />
+
       <ForecastList
         v-if="forecast"
         :forecast="forecast"
