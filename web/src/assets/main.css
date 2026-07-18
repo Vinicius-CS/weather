@@ -60,7 +60,10 @@ body {
   flex: 1;
   font-size: 1rem;
   outline: none;
+  overflow: hidden;
   padding: 0.875rem 1.125rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .card {
