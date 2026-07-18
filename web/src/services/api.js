@@ -11,12 +11,22 @@ async function request(path)
   return data
 }
 
-export function getCities(params)
+export function getCities(text)
 {
+  const params = {
+    'text': text
+  }
+
   return request(`/api/cities?${new URLSearchParams(params)}`)
 }
 
-export function getWeather(params)
+export function getWeather(type, latitude, longitude)
 {
-  return request(`/api/weather?${new URLSearchParams(params)}`)
+  const params = new URLSearchParams({
+    'type': type,
+    'latitude': latitude,
+    'longitude': longitude
+  })
+
+  return request(`/api/weather?${params}`)
 }

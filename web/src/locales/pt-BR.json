@@ -3,6 +3,9 @@
     "title": "Weather",
     "subtitle": "Consulte o clima atual e a previsão para os próximos dias"
   },
+  "search": {
+    "placeholder": "Digite uma cidade..."
+  },
   "current": {
     "feelsLike": "Sensação",
     "minMax": "Mín / Máx",

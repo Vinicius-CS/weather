@@ -42,6 +42,27 @@ body {
   opacity: 0.85;
 }
 
+.search {
+  display: flex;
+  gap: 0.625rem;
+  margin-bottom: 1.25rem;
+  max-width: 45rem;
+  position: relative;
+  width: 100%;
+}
+
+.search input {
+  background: rgba(255, 255, 255, 0.85);
+  border-radius: 0.75rem;
+  border: none;
+  box-shadow: 0 0.25rem 0.875rem rgba(0, 0, 0, 0.15);
+  color: #1f2937;
+  flex: 1;
+  font-size: 1rem;
+  outline: none;
+  padding: 0.875rem 1.125rem;
+}
+
 .card {
   background: rgba(255, 255, 255, 0.80);
   border-radius: 1rem;
