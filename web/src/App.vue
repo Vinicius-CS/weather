@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, ref } from 'vue'
+import { nextTick, watch, onMounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { getSearches, getCities, getWeather } from './services/api.js'
 import CurrentWeather from './components/CurrentWeather.vue';
@@ -10,6 +10,7 @@ const { t } = useI18n()
 const current = ref(null)
 const forecast = ref(null)
 const userLocation = ref(null)
+const searchInput = ref(null)
 const loading = ref(true)
 const cities = ref([])
 const topCities = ref([])
@@ -18,27 +19,53 @@ const geoText = ref('')
 
 async function loadCity(city)
 {
-  search.value = ''
-
-  cities.value = await getCities(city.trim()) ?? []
-
-  if (cities.value.length === 0)
+  if (!city.trim())
   {
     return
   }
 
-  current.value = await getWeather(
-    'weather',
-    cities.value[0].latitude,
-    cities.value[0].longitude
-  )
+  try
+  {
+    loading.value = true
+    search.value = ''
+    geoText.value = ''
 
-  forecast.value = await getWeather(
-    'forecast',
-    cities.value[0].latitude,
-    cities.value[0].longitude
-  )
+    cities.value = await getCities(city.trim()) ?? []
+
+    if (cities.value.length === 0)
+    {
+      return
+    }
+
+    current.value = await getWeather(
+      'weather',
+      cities.value[0].latitude,
+      cities.value[0].longitude
+    )
+
+    forecast.value = await getWeather(
+      'forecast',
+      cities.value[0].latitude,
+      cities.value[0].longitude
+    )
+  }
+  catch (e)
+  {
+    console.error(e)
+  }
+  finally
+  {
+    loading.value = false
+  }
 }
+
+watch(loading, async (isLoading) => {
+  if (!isLoading)
+  {
+    await nextTick()
+    searchInput.value?.focus()
+  }
+})
 
 onMounted(async () => {
   topCities.value = await getSearches() ?? []
@@ -99,10 +126,12 @@ onMounted(async () => {
 
     <div class="search">
       <input
+        ref="searchInput"
         v-model="search"
         :placeholder="$t('search.placeholder')"
         type="text"
         autofocus
+        :disabled="loading"
         @keydown.enter.prevent="loadCity(search)"
       />
     </div>
@@ -120,6 +149,7 @@ onMounted(async () => {
         v-for="top in topCities"
         :key="top.city"
         class="chip"
+        :disabled="loading"
         @click="loadCity(top.city)"
       >
         {{ top.city }}
