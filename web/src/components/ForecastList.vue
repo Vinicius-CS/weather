@@ -1,5 +1,5 @@
 <script setup>
-import { computed } from 'vue'
+import { ref, computed, watch, onUnmounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 const props = defineProps({
@@ -37,13 +37,40 @@ const days = computed(() => {
         day: '2-digit',
         month: '2-digit',
       }),
-      icon: `https://openweathermap.org/img/wn/${midday.icon}@2x.png`,
+      icon: `https://cdn.jsdelivr.net/npm/@bybas/weather-icons@2.0.0/production/fill/openweathermap/${midday.icon}.svg`,
       description: midday.description,
       min: Math.round(Math.min(...items.map((i) => i.temp_min))),
       max: Math.round(Math.max(...items.map((i) => i.temp_max))),
     }
   })
 })
+
+const progress = ref(0)
+let frame = 0
+
+function animate()
+{
+  cancelAnimationFrame(frame)
+
+  const duration = 1400
+  const start = performance.now()
+
+  function step(now)
+  {
+    const progressStep = Math.min((now - start) / duration, 1)
+    progress.value = 1 - Math.pow(1 - progressStep, 3)
+
+    if (progressStep < 1)
+    {
+      frame = requestAnimationFrame(step)
+    }
+  }
+
+  frame = requestAnimationFrame(step)
+}
+
+watch(() => props.forecast, animate, { immediate: true })
+onUnmounted(() => cancelAnimationFrame(frame))
 </script>
 
 <template>
@@ -55,7 +82,7 @@ const days = computed(() => {
         <span class="day">{{ day.label }}</span>
         <img :src="day.icon" :alt="day.description" />
         <span class="description">{{ day.description }}</span>
-        <span class="temps"><strong>{{ day.max }}°</strong> / {{ day.min }}°</span>
+        <span class="temps"><strong>{{ Math.round(day.max * progress) }}°</strong> / {{ Math.round(day.min * progress) }}°</span>
       </li>
     </ul>
   </section>

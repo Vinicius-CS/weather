@@ -171,7 +171,6 @@ onMounted(async () => {
       <button
         v-for="top in topCities"
         :key="top.city"
-        class="chip"
         :disabled="loading"
         @click="loadCity(top.city)"
       >
@@ -180,7 +179,7 @@ onMounted(async () => {
     </div>
 
     <p
-      v-if="geoText"
+      v-if="geoText && !current"
       class="geo-status"
     >
       {{ geoText }}
@@ -188,11 +187,13 @@ onMounted(async () => {
 
     <template v-if="current">
       <CurrentWeather
+        :key="current.city"
         :current="current"
       />
 
       <ForecastList
         v-if="forecast"
+        :key="current.city"
         :forecast="forecast"
       />
     </template>

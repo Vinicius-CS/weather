@@ -26,7 +26,7 @@ body {
   align-items: center;
   display: flex;
   flex-direction: column;
-  padding: 2.5rem 1.25rem 3.75rem;
+  padding: 2.5rem 1.25rem 0 1.25rem;
 }
 
 .header {
@@ -67,7 +67,12 @@ body {
   overflow: hidden;
   padding: 0.875rem 1.125rem;
   text-overflow: ellipsis;
+  transition: transform 0.4s var(--spring), box-shadow 0.3s;
   white-space: nowrap;
+}
+
+.search input:focus {
+  transform: scale(1.015);
 }
 
 .loading-bar {
@@ -92,16 +97,13 @@ body {
   width: 40%;
 }
 
-@keyframes indeterminate {
-  from { transform: translateX(-100%); }
-  to { transform: translateX(350%); }
-}
-
 .chips {
   align-items: center;
+  animation: spring-in 0.55s var(--spring) both;
   display: flex;
   flex-wrap: wrap;
   gap: 0.5rem;
+  line-height: 0;
   margin-bottom: 1rem;
 }
 
@@ -118,16 +120,22 @@ body {
   cursor: pointer;
   font-size: 0.9rem;
   padding: 0.2rem 0.5rem;
+  transition: transform 0.35s var(--spring), background 0.2s;
+}
+
+.chips button:hover {
+  transform: translateY(-0.188rem);
 }
 
 .card {
+  animation: spring-in 0.55s var(--spring) both;
   background: rgba(255, 255, 255, 0.80);
   border-radius: 1rem;
   box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.18);
   margin-bottom: 1.25rem;
+  max-width: 45rem;
   padding: 1.5rem;
   width: 100%;
-  max-width: 45rem;
 }
 
 .card h3 {
@@ -142,6 +150,7 @@ body {
 }
 
 .current img {
+  animation: float 3.5s ease-in-out infinite;
   height: 7.5rem;
   width: 7.5rem;
 }
@@ -186,12 +195,33 @@ body {
 
 .forecast li {
   align-items: center;
+  animation: spring-in 0.5s var(--spring) both;
   border-bottom: 0.063rem solid rgba(255, 255, 255, 0.25);
   display: grid;
   gap: 0.75rem;
   grid-template-columns: 6rem 2.75rem 1fr auto;
   justify-content: center;
   padding: 0.5rem 0;
+}
+
+.forecast li:nth-child(1) {
+  animation-delay: 0.05s;
+}
+
+.forecast li:nth-child(2) {
+  animation-delay: 0.12s;
+}
+
+.forecast li:nth-child(3) {
+  animation-delay: 0.19s;
+}
+
+.forecast li:nth-child(4) {
+  animation-delay: 0.26s;
+}
+
+.forecast li:nth-child(5) {
+  animation-delay: 0.33s;
 }
 
 .forecast li:last-child {
@@ -223,10 +253,44 @@ body {
 }
 
 .geo-status {
+  animation: spring-in 0.45s var(--spring) both;
   color: rgba(255, 255, 255, 0.9);
   font-size: 0.95rem;
   margin-bottom: 1rem;
   text-align: center;
+}
+
+@keyframes indeterminate {
+  from {
+    transform: translateX(-100%);
+  }
+
+  to {
+    transform: translateX(350%);
+  }
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-0.5rem);
+  }
+}
+
+@keyframes spring-in {
+  from {
+    opacity: 0;
+    transform: translateY(1.5rem) scale(0.96);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
 
 @media (max-width: 390px) {
