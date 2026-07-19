@@ -107,6 +107,7 @@ onMounted(async () => {
   if (!navigator.geolocation || !window.isSecureContext)
   {
     loading.value = false
+    geoText.value = t('geo.denied')
     return
   }
 
