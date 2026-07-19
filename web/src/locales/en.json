@@ -21,5 +21,8 @@
   },
   "forecast": {
     "title": "Coming days"
+  },
+  "errors": {
+    "unavailable": "Oops! The system is temporarily unavailable, please try again later."
   }
 }

@@ -16,6 +16,7 @@ const autocomplete = ref([])
 const topCities = ref([])
 const search = ref('')
 const geoText = ref('')
+const errorText = ref('')
 
 async function loadByCoordinates(latitude, longitude)
 {
@@ -25,6 +26,7 @@ async function loadByCoordinates(latitude, longitude)
     autocomplete.value = []
     search.value = ''
     geoText.value = ''
+    errorText.value = ''
 
     current.value = await getWeather(
       'weather',
@@ -43,6 +45,7 @@ async function loadByCoordinates(latitude, longitude)
   catch (e)
   {
     console.error(e)
+    errorText.value = e.status !== 200 && e.status !== 201 ? e.message : t('errors.unavailable')
   }
   finally
   {
@@ -179,6 +182,13 @@ onMounted(async () => {
       class="geo-status"
     >
       {{ geoText }}
+    </p>
+
+    <p
+      v-if="errorText"
+      class="error-status"
+    >
+      {{ errorText }}
     </p>
 
     <template v-if="current">

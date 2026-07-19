@@ -8,7 +8,9 @@ async function request(path)
 
   if (!res.ok)
   {
-    throw new Error(data.error || 'Erro ao consultar a API')
+    const error = new Error(data.error || i18n.global.t('errors.unavailable'))
+    error.status = res.status
+    throw error
   }
 
   return data

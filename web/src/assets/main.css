@@ -292,6 +292,15 @@ body {
   text-align: center;
 }
 
+.error-status {
+  animation: spring-in 0.45s var(--spring) both;
+  color: #fca5a5;
+  font-size: 0.95rem;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+
 @keyframes indeterminate {
   from {
     transform: translateX(-100%);

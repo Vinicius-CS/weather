@@ -21,5 +21,8 @@
   },
   "forecast": {
     "title": "Próximos dias"
+  },
+  "errors": {
+    "unavailable": "Ops! Sistema temporariamente indisponível, volte mais tarde."
   }
 }
