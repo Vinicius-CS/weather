@@ -17,7 +17,7 @@ WHERE
   endpoint = ? AND
   latitude = ? AND
   longitude = ? AND
-  fetched_at > NOW()
+  fetched_at > (NOW() - INTERVAL 900 SECOND)
 EOQ;
 
       $stmt = Database::connection()->prepare($sql);
