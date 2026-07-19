@@ -71,8 +71,38 @@ body {
   white-space: nowrap;
 }
 
+.search input:disabled {
+  background: rgba(255, 255, 255, 0.5);
+  box-shadow: none;
+}
+
 .search input:focus {
   transform: scale(1.015);
+}
+
+.autocomplete {
+  animation: spring-in 0.35s var(--spring) both;
+  background: #dedfe1;
+  border-radius: 0.75rem;
+  box-shadow: 0 0.5rem 1.25rem rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  left: 0;
+  list-style: none;
+  overflow: hidden;
+  position: absolute;
+  right: 0;
+  top: calc(100% + 0.5rem);
+  z-index: 10;
+}
+
+.autocomplete li {
+  color: #1f2937;
+  padding: 0.75rem 1.125rem;
+  transition: background 0.2s;
+}
+
+.autocomplete li:hover {
+  background: #fafafa;
 }
 
 .loading-bar {

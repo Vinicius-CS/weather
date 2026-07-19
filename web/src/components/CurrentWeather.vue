@@ -1,6 +1,7 @@
 <script setup>
 import { reactive, computed, watch, onUnmounted } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { formatLocation } from '../services/location.js'
 
 const props = defineProps({
   current: { type: Object, required: true },
@@ -8,12 +9,9 @@ const props = defineProps({
 
 const { locale } = useI18n()
 
-const location = computed(() => {
-  const place = `${props.current.city}${props.current.state ? `, ${props.current.state}` : ''}`
-  const country = props.current.country ? new Intl.DisplayNames([locale.value], { type: 'region' }).of(props.current.country) : ''
-
-  return country ? `${place} - ${country}` : place
-})
+const location = computed(() =>
+  formatLocation(props.current.city, props.current.state, props.current.country, locale.value)
+)
 
 const values = reactive({
   temp: 0,

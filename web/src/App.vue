@@ -2,52 +2,43 @@
 import { nextTick, watch, onMounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { getSearches, getCities, getWeather } from './services/api.js'
+import { formatLocation } from './services/location.js'
 import CurrentWeather from './components/CurrentWeather.vue';
 import ForecastList from './components/ForecastList.vue';
 
-const { t } = useI18n()
+const { t, locale } = useI18n()
 
 const current = ref(null)
 const forecast = ref(null)
-const userLocation = ref(null)
 const searchInput = ref(null)
 const loading = ref(true)
-const cities = ref([])
+const autocomplete = ref([])
 const topCities = ref([])
 const search = ref('')
 const geoText = ref('')
 
-async function loadCity(city)
+async function loadByCoordinates(latitude, longitude)
 {
-  if (!city.trim())
-  {
-    return
-  }
-
   try
   {
     loading.value = true
+    autocomplete.value = []
     search.value = ''
     geoText.value = ''
 
-    cities.value = await getCities(city.trim()) ?? []
-
-    if (cities.value.length === 0)
-    {
-      return
-    }
-
     current.value = await getWeather(
       'weather',
-      cities.value[0].latitude,
-      cities.value[0].longitude
+      latitude,
+      longitude
     )
 
     forecast.value = await getWeather(
       'forecast',
-      cities.value[0].latitude,
-      cities.value[0].longitude
+      latitude,
+      longitude
     )
+
+    topCities.value = await getSearches() ?? []
   }
   catch (e)
   {
@@ -58,6 +49,26 @@ async function loadCity(city)
     loading.value = false
   }
 }
+
+async function loadCity(name)
+{
+  const results = await getCities(name.trim()) ?? []
+
+  if (results.length)
+  {
+    loadByCoordinates(results[0].latitude, results[0].longitude)
+  }
+}
+
+watch(search, async (text) => {
+  if (text.trim().length < 1)
+  {
+    autocomplete.value = []
+    return
+  }
+
+  autocomplete.value = await getCities(text.trim()) ?? []
+})
 
 watch(loading, async (isLoading) => {
   if (!isLoading)
@@ -91,7 +102,7 @@ onMounted(async () => {
     }
   })
 
-  topCities.value = await getSearches() ?? []
+  getSearches().then((rows) => { topCities.value = rows ?? [] })
 
   if (!navigator.geolocation || !window.isSecureContext)
   {
@@ -102,36 +113,10 @@ onMounted(async () => {
   geoText.value = t('geo.locating')
 
   navigator.geolocation.getCurrentPosition(
-    async (position) => {
-      try
-      {
-        userLocation.value = {
-          latitude: position.coords.latitude.toFixed(4),
-          longitude: position.coords.longitude.toFixed(4),
-        }
-
-        current.value = await getWeather(
-          'weather',
-          userLocation.value.latitude,
-          userLocation.value.longitude
-        )
-
-        forecast.value = await getWeather(
-          'forecast',
-          userLocation.value.latitude,
-          userLocation.value.longitude
-        )
-      }
-      catch (e)
-      {
-        console.error(e)
-        geoText.value = t('geo.denied')
-      }
-      finally
-      {
-        loading.value = false
-      }
-    },
+    (position) => loadByCoordinates(
+      position.coords.latitude.toFixed(4),
+      position.coords.longitude.toFixed(4)
+    ),
     () => {
       loading.value = false
       geoText.value = t('geo.denied')
@@ -155,8 +140,18 @@ onMounted(async () => {
         type="text"
         autofocus
         :disabled="loading"
-        @keydown.enter.prevent="loadCity(search)"
+        @blur="autocomplete = []"
       />
+
+      <ul v-if="autocomplete.length" class="autocomplete">
+        <li
+          v-for="city in autocomplete"
+          :key="`${city.latitude},${city.longitude}`"
+          @mousedown="loadByCoordinates(city.latitude, city.longitude)"
+        >
+          {{ formatLocation(city.name, city.state, city.country, locale) }}
+        </li>
+      </ul>
     </div>
 
     <div

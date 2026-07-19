@@ -4,7 +4,7 @@
     "subtitle": "Check the current weather and the forecast for the coming days"
   },
   "search": {
-    "placeholder": "Type a city..."
+    "placeholder": "Type and select a city..."
   },
   "geo": {
     "locating": "Detecting your location...",
