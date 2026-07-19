@@ -15,7 +15,7 @@ final class CitiesService
 
     if ($this->apiKey === '')
     {
-      throw new RuntimeException('OPENWEATHER_API_KEY não configurada no arquivo .env');
+      throw new RuntimeException(Lang::get('missing_api_key'));
     }
   }
 
@@ -37,14 +37,14 @@ final class CitiesService
 
     if ($body === false)
     {
-      throw new RuntimeException('Falha ao conectar na OpenWeatherMap');
+      throw new RuntimeException(Lang::get('connection_failed'));
     }
 
     $data = json_decode((string) $body, true);
 
     if ($status !== 200 || !is_array($data))
     {
-      throw new RuntimeException('Erro na OpenWeatherMap: ' . ($data['message'] ?? "HTTP {$status}"));
+      throw new RuntimeException(Lang::get('api_error') . ': ' . ($data['message'] ?? "HTTP {$status}"));
     }
 
     $results = [];

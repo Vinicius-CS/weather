@@ -10,7 +10,7 @@ final class WeatherController
 
     if (!in_array($tipo, ['weather', 'forecast'], true))
     {
-      throw new InvalidArgumentException('Informe o parâmetro "type" como "weather" ou "forecast"');
+      throw new InvalidArgumentException(Lang::get('invalid_type'));
     }
 
     $latitude = $data['latitude'] ?? null;
@@ -18,7 +18,7 @@ final class WeatherController
 
     if (!is_numeric($latitude) || !is_numeric($longitude))
     {
-      throw new InvalidArgumentException('Informe os parâmetros "latitude" e "longitude"');
+      throw new InvalidArgumentException(Lang::get('invalid_coordinates'));
     }
 
     $weatherService = new WeatherService();

@@ -14,7 +14,7 @@ final class WeatherService
 
     if ($this->apiKey === '')
     {
-      throw new RuntimeException('OPENWEATHER_API_KEY não configurada no arquivo .env');
+      throw new RuntimeException(Lang::get('missing_api_key'));
     }
   }
 
@@ -24,8 +24,9 @@ final class WeatherService
 
     $latitude = round((float) $location['latitude'], 6);
     $longitude = round((float) $location['longitude'], 6);
+    $lang = Lang::current();
 
-    if (($cached = $cache->get($endpoint, $latitude, $longitude)) !== null)
+    if (($cached = $cache->get($endpoint, $latitude, $longitude, $lang)) !== null)
     {
       return $cached;
     }
@@ -33,6 +34,7 @@ final class WeatherService
     $ch = curl_init(self::BASE_URL . '/' . $endpoint . '?' . http_build_query([
       'lat' => $latitude,
       'lon' => $longitude,
+      'lang' => $lang,
       'appid' => $this->apiKey,
       'units' => 'metric'
     ]));
@@ -47,19 +49,19 @@ final class WeatherService
 
     if ($body === false)
     {
-      throw new RuntimeException('Falha ao conectar na OpenWeatherMap');
+      throw new RuntimeException(Lang::get('connection_failed'));
     }
 
     $data = json_decode((string) $body, true);
 
     if ($status === 404)
     {
-      throw new InvalidArgumentException('Cidade não encontrada');
+      throw new InvalidArgumentException(Lang::get('city_not_found'));
     }
 
     if ($status !== 200 || !is_array($data))
     {
-      throw new RuntimeException('Erro na OpenWeatherMap: ' . ($data['message'] ?? "HTTP {$status}"));
+      throw new RuntimeException(Lang::get('api_error') . ': ' . ($data['message'] ?? "HTTP {$status}"));
     }
 
     if ($endpoint === 'weather')
@@ -104,7 +106,7 @@ final class WeatherService
       ];
     }
 
-    $cache->put($endpoint, $latitude, $longitude, $data);
+    $cache->put($endpoint, $latitude, $longitude, $data, $lang);
 
     return $data;
   }

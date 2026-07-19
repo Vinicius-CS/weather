@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 final class CacheService
 {
-  public function get(string $endpoint, float $latitude, float $longitude): array | null
+  public function get(string $endpoint, float $latitude, float $longitude, string $lang): array | null
   {
     try
     {
@@ -17,6 +17,7 @@ WHERE
   endpoint = ? AND
   latitude = ? AND
   longitude = ? AND
+  lang = ? AND
   fetched_at > (NOW() - INTERVAL 900 SECOND)
 EOQ;
 
@@ -26,6 +27,7 @@ EOQ;
         $endpoint,
         $latitude,
         $longitude,
+        $lang,
       ]);
 
       $row = $stmt->fetch();
@@ -39,7 +41,7 @@ EOQ;
     }
   }
 
-  public function put(string $endpoint, float $latitude, float $longitude, array $payload): void
+  public function put(string $endpoint, float $latitude, float $longitude, array $payload, string $lang): void
   {
     try
     {
@@ -50,11 +52,13 @@ INSERT INTO
     endpoint,
     latitude,
     longitude,
+    lang,
     payload,
     fetched_at
   )
 VALUES
   (
+    ?,
     ?,
     ?,
     ?,
@@ -72,6 +76,7 @@ EOQ;
         $endpoint,
         $latitude,
         $longitude,
+        $lang,
         json_encode($payload, JSON_UNESCAPED_UNICODE),
       ]);
     }

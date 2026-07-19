@@ -4,14 +4,15 @@ import en from './locales/en.json'
 
 export const API_LANG = {
   'pt-BR': 'pt_br',
-  en: 'en',
+  en: 'en'
 }
 
 export default createI18n({
-  locale: localStorage.getItem('weather-locale') || navigator.language?.startsWith('pt') ? 'pt-BR' : 'en',
+  locale: localStorage.getItem('weather-locale') || (navigator.language?.startsWith('pt') ? 'pt-BR' : 'en'),
   fallbackLocale: 'en',
+  legacy: false,
   messages: {
     'pt-BR': ptBR,
     en,
-  },
+  }
 })

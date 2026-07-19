@@ -11,7 +11,8 @@ CREATE TABLE IF NOT EXISTS cache (
   endpoint ENUM('weather', 'forecast') NOT NULL,
   latitude DECIMAL(9, 6) NOT NULL,
   longitude DECIMAL(9, 6) NOT NULL,
+  lang VARCHAR(5) NOT NULL DEFAULT 'en',
   payload JSON NOT NULL,
   fetched_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  UNIQUE KEY uk_endpoint_coords (endpoint, latitude, longitude)
+  UNIQUE KEY uk_endpoint_coords_lang (endpoint, latitude, longitude, lang)
 );

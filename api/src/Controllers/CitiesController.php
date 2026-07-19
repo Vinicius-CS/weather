@@ -10,7 +10,7 @@ final class CitiesController
 
     if (strlen($text) < 1)
     {
-      throw new InvalidArgumentException('Informe o parâmetro "text"');
+      throw new InvalidArgumentException(Lang::get('invalid_text'));
     }
 
     $citiesService = new CitiesService();
