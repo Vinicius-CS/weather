@@ -62,6 +62,6 @@ EOQ;
       $rows = [];
     }
 
-    Response::json($rows);
+    return $rows;
   }
 }

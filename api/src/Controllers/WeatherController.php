@@ -21,11 +21,10 @@ final class WeatherController
       throw new InvalidArgumentException('Informe os parâmetros "latitude" e "longitude"');
     }
 
-    $cities = new CitiesService();
-    $service = new WeatherService();
-    $searchers = new SearchesService();
+    $weatherService = new WeatherService();
+    $searchersService = new SearchesService();
 
-    $weather = $service->fetch(
+    $weather = $weatherService->fetch(
       $tipo,
       [
         'latitude' => $latitude,
@@ -35,21 +34,15 @@ final class WeatherController
 
     if ($tipo === 'weather')
     {
-      $place = $cities->reverse((float) $latitude, (float) $longitude);
       $ip = ($_SERVER['HTTP_X_FORWARDED_FOR'] ?? '') ?: ($_SERVER['REMOTE_ADDR'] ?? '');
+      $city = $weather['city'] ?? '';
 
-      if ($place !== null)
+      if ($ip !== '' && $city !== '')
       {
-        $weather['city'] = $place['name'];
-        $weather['state'] = $place['state'];
-
-        if ($ip !== '')
-        {
-          $searchers->log(
-            $place['name'],
-            trim(explode(',', $ip)[0])
-          );
-        }
+        $searchersService->log(
+          $city,
+          trim(explode(',', $ip)[0])
+        );
       }
     }
 

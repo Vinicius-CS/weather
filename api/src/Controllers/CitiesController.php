@@ -13,8 +13,8 @@ final class CitiesController
       throw new InvalidArgumentException('Informe o parâmetro "text"');
     }
 
-    $service = new CitiesService();
+    $citiesService = new CitiesService();
 
-    Response::json($service->fetch($text));
+    Response::json($citiesService->fetch($text));
   }
 }

@@ -77,6 +77,16 @@ final class WeatherService
         'humidity' => $data['main']['humidity'],
         'wind' => $data['wind']['speed'],
       ];
+
+      $citiesService = new CitiesService();
+
+      $place = $citiesService->reverse($latitude, $longitude);
+
+      if ($place !== null)
+      {
+        $data['city'] = $place['name'];
+        $data['state'] = $place['state'];
+      }
     }
     else
     {

@@ -6,8 +6,8 @@ final class SearchesController
 {
   public function top(): never
   {
-    $service = new SearchesService();
+    $searchersService = new SearchesService();
 
-    Response::json($service->top());
+    Response::json($searchersService->top());
   }
 }
