@@ -15,7 +15,7 @@
   },
   "current": {
     "feelsLike": "Sensação",
-    "minMax": "Mín / Máx",
+    "maxMin": "Máx / Mín",
     "humidity": "Umidade",
     "wind": "Vento"
   },

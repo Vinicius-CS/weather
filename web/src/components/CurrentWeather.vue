@@ -38,8 +38,8 @@ const location = computed(() => {
       </li>
 
       <li>
-        <span>{{ $t('current.minMax') }}</span>
-        <strong>{{ Math.round(current.temp_min) }}° / {{ Math.round(current.temp_max) }}°</strong>
+        <span>{{ $t('current.maxMin') }}</span>
+        <strong>{{ Math.round(current.temp_max) }}° / {{ Math.round(current.temp_min) }}°</strong>
       </li>
 
       <li>
