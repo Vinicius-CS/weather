@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 require __DIR__ . '/../src/Core/Response.php';
 require __DIR__ . '/../src/Core/Database.php';
+require __DIR__ . '/../src/Services/CacheService.php';
 require __DIR__ . '/../src/Services/CitiesService.php';
 require __DIR__ . '/../src/Services/SearchesService.php';
 require __DIR__ . '/../src/Services/WeatherService.php';

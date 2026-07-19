@@ -63,7 +63,7 @@ final class CitiesService
     return $results;
   }
 
-  public function reverse(float $latitude, float $longitude): ?string
+  public function reverse(float $latitude, float $longitude): array | null
   {
     $ch = curl_init(self::REVERSE_URL . '?' . http_build_query([
       'lat' => $latitude,
@@ -80,6 +80,10 @@ final class CitiesService
     $body = curl_exec($ch);
     $data = $body !== false ? json_decode((string) $body, true) : null;
 
-    return isset($data[0]['name']) ? (string) $data[0]['name'] : null;
+    return isset($data[0]['name']) ? [
+      'name' => (string) $data[0]['name'],
+      'state' => (string) ($data[0]['state'] ?? ''),
+      'country' => (string) ($data[0]['country'] ?? ''),
+    ] : null;
   }
 }

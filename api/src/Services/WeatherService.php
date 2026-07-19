@@ -20,7 +20,19 @@ final class WeatherService
 
   public function fetch(string $endpoint, array $location): array
   {
-    $ch = curl_init(self::BASE_URL . '/' . $endpoint . '?' . http_build_query($location + [
+    $cache = new CacheService();
+
+    $latitude = round((float) $location['latitude'], 6);
+    $longitude = round((float) $location['longitude'], 6);
+
+    if (($cached = $cache->get($endpoint, $latitude, $longitude)) !== null)
+    {
+      return $cached;
+    }
+
+    $ch = curl_init(self::BASE_URL . '/' . $endpoint . '?' . http_build_query([
+      'lat' => $latitude,
+      'lon' => $longitude,
       'appid' => $this->apiKey,
       'units' => 'metric'
     ]));
@@ -49,6 +61,40 @@ final class WeatherService
     {
       throw new RuntimeException('Erro na OpenWeatherMap: ' . ($data['message'] ?? "HTTP {$status}"));
     }
+
+    if ($endpoint === 'weather')
+    {
+      $data = [
+        'city' => $data['name'],
+        'state' => '',
+        'country' => $data['sys']['country'] ?? '',
+        'icon' => $data['weather'][0]['icon'],
+        'description' => $data['weather'][0]['description'],
+        'temp' => $data['main']['temp'],
+        'feels_like' => $data['main']['feels_like'],
+        'temp_min' => $data['main']['temp_min'],
+        'temp_max' => $data['main']['temp_max'],
+        'humidity' => $data['main']['humidity'],
+        'wind' => $data['wind']['speed'],
+      ];
+    }
+    else
+    {
+      $data = [
+        'list' => array_map(
+          fn (array $item) => [
+            'date' => $item['dt_txt'],
+            'icon' => $item['weather'][0]['icon'],
+            'description' => $item['weather'][0]['description'],
+            'temp_min' => $item['main']['temp_min'],
+            'temp_max' => $item['main']['temp_max'],
+          ],
+          $data['list']
+        ),
+      ];
+    }
+
+    $cache->put($endpoint, $latitude, $longitude, $data);
 
     return $data;
   }

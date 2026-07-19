@@ -14,7 +14,7 @@ const days = computed(() => {
 
   for (const item of props.forecast.list)
   {
-    const date = item.dt_txt.slice(0, 10)
+    const date = item.date.slice(0, 10)
 
     if (date !== today)
     {
@@ -28,7 +28,7 @@ const days = computed(() => {
   }
 
   return Object.entries(groups).slice(0, 5).map(([date, items]) => {
-    const midday = items.find((i) => i.dt_txt.includes('12:00:00')) ?? items[0]
+    const midday = items.find((i) => i.date.includes('12:00:00')) ?? items[0]
 
     return {
       date,
@@ -37,10 +37,10 @@ const days = computed(() => {
         day: '2-digit',
         month: '2-digit',
       }),
-      icon: `https://openweathermap.org/img/wn/${midday.weather[0].icon}@2x.png`,
-      description: midday.weather[0].description,
-      min: Math.round(Math.min(...items.map((i) => i.main.temp_min))),
-      max: Math.round(Math.max(...items.map((i) => i.main.temp_max))),
+      icon: `https://openweathermap.org/img/wn/${midday.icon}@2x.png`,
+      description: midday.description,
+      min: Math.round(Math.min(...items.map((i) => i.temp_min))),
+      max: Math.round(Math.max(...items.map((i) => i.temp_max))),
     }
   })
 })

@@ -1,6 +1,18 @@
 <script setup>
-defineProps({
+import { computed } from 'vue'
+import { useI18n } from 'vue-i18n'
+
+const props = defineProps({
   current: { type: Object, required: true },
+})
+
+const { locale } = useI18n()
+
+const location = computed(() => {
+  const place = `${props.current.city}${props.current.state ? `, ${props.current.state}` : ''}`
+  const country = props.current.country ? new Intl.DisplayNames([locale.value], { type: 'region' }).of(props.current.country) : ''
+
+  return country ? `${place} - ${country}` : place
 })
 </script>
 
@@ -8,36 +20,36 @@ defineProps({
   <section class="card">
     <div class="current">
       <img
-        :src="`https://openweathermap.org/img/wn/${current.weather[0].icon}@4x.png`"
-        :alt="current.weather[0].description"
+        :src="`https://openweathermap.org/img/wn/${current.icon}@4x.png`"
+        :alt="current.description"
       />
 
       <div>
-        <h2>{{ current.name }}, {{ current.state || current.sys.country }}</h2>
-        <p class="temp">{{ Math.round(current.main.temp) }}°C</p>
-        <p class="description">{{ current.weather[0].description }}</p>
+        <h2>{{ location }}</h2>
+        <p class="temp">{{ Math.round(current.temp) }}°C</p>
+        <p class="description">{{ current.description }}</p>
       </div>
     </div>
 
     <ul class="details">
       <li>
         <span>{{ $t('current.feelsLike') }}</span>
-        <strong>{{ Math.round(current.main.feels_like) }}°C</strong>
+        <strong>{{ Math.round(current.feels_like) }}°C</strong>
       </li>
 
       <li>
         <span>{{ $t('current.minMax') }}</span>
-        <strong>{{ Math.round(current.main.temp_min) }}° / {{ Math.round(current.main.temp_max) }}°</strong>
+        <strong>{{ Math.round(current.temp_min) }}° / {{ Math.round(current.temp_max) }}°</strong>
       </li>
 
       <li>
         <span>{{ $t('current.humidity') }}</span>
-        <strong>{{ current.main.humidity }}%</strong>
+        <strong>{{ current.humidity }}%</strong>
       </li>
 
       <li>
         <span>{{ $t('current.wind') }}</span>
-        <strong>{{ Math.round(current.wind.speed * 3.6) }} km/h</strong>
+        <strong>{{ Math.round(current.wind * 3.6) }} km/h</strong>
       </li>
     </ul>
   </section>

@@ -28,24 +28,25 @@ final class WeatherController
     $weather = $service->fetch(
       $tipo,
       [
-        'lat' => round((float) $latitude, 4),
-        'lon' => round((float) $longitude, 4),
+        'latitude' => $latitude,
+        'longitude' => $longitude
       ]
     );
 
     if ($tipo === 'weather')
     {
-      $city = $cities->reverse((float) $latitude, (float) $longitude) ?? '';
+      $place = $cities->reverse((float) $latitude, (float) $longitude);
       $ip = ($_SERVER['HTTP_X_FORWARDED_FOR'] ?? '') ?: ($_SERVER['REMOTE_ADDR'] ?? '');
 
-      if ($city !== '')
+      if ($place !== null)
       {
-        $weather['name'] = $city;
+        $weather['city'] = $place['name'];
+        $weather['state'] = $place['state'];
 
         if ($ip !== '')
         {
           $searchers->log(
-            $city,
+            $place['name'],
             trim(explode(',', $ip)[0])
           );
         }
