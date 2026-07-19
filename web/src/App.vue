@@ -68,6 +68,29 @@ watch(loading, async (isLoading) => {
 })
 
 onMounted(async () => {
+  window.addEventListener('keydown', (event) => {
+    if (loading.value)
+    {
+      return
+    }
+
+    if (event.key === 'Enter')
+    {
+      if (search.value.trim())
+      {
+        loadCity(search.value)
+      }
+      else
+      {
+        searchInput.value?.focus()
+      }
+    }
+    else if (event.key.length === 1 && !event.ctrlKey && !event.metaKey)
+    {
+      searchInput.value?.focus()
+    }
+  })
+
   topCities.value = await getSearches() ?? []
 
   if (!navigator.geolocation || !window.isSecureContext)
