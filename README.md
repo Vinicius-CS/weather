@@ -15,7 +15,7 @@ Projeto de consulta de clima atual e previsão dos próximos dias com frontend e
   <a href="https://vinicius-cs.github.io/weather/"><img alt="Acessar Site" src="https://img.shields.io/badge/Acessar_Site-323330?style=for-the-badge&logo=github&logoColor=F59E0B"></a>
 </div>
 
-https://github.com/user-attachments/assets/c0fbb41c-3637-4d10-942b-2d6af27e2a88
+https://github.com/user-attachments/assets/a84db471-df4c-41b2-8dc4-2ac796565338
 
 <hr>
 
