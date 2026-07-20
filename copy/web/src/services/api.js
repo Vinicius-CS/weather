@@ -1,9 +1,11 @@
 import i18n, { API_LANG } from '../i18n.js'
 
+const API_URL = import.meta.env.PROD ? 'https://weather-api-ruzg.onrender.com' : ''
+
 async function request(path)
 {
   const lang = API_LANG[typeof i18n.global.locale === 'string' ? i18n.global.locale : i18n.global.locale.value] ?? 'en'
-  const res = await fetch(`${path}${path.includes('?') ? '&' : '?'}lang=${lang}`)
+  const res = await fetch(`${API_URL}${path}${path.includes('?') ? '&' : '?'}lang=${lang}`)
   const data = await res.json().catch(() => ({}))
 
   if (!res.ok)
