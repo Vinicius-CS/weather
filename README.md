@@ -11,10 +11,6 @@
 
 Projeto de consulta de clima atual e previsão dos próximos dias com frontend em Vue 3 e Vite e backend em PHP, para o banco de dados foi utilizado o MySQL, foi utilizado a [API da OpenWeatherMap](https://openweathermap.org/api) para obter os dados de clima e todo o ambiente é executado com Docker.
 
-<div align="center">
-  <a href="https://vinicius-cs.github.io/weather/"><img alt="Acessar Site" src="https://img.shields.io/badge/Acessar_Site-323330?style=for-the-badge&logo=github&logoColor=F59E0B"></a>
-</div>
-
 https://github.com/user-attachments/assets/a84db471-df4c-41b2-8dc4-2ac796565338
 
 <hr>
